@@ -1,0 +1,669 @@
+/* ===============================================
+   基础样式重置
+   =============================================== */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  padding: 1rem;
+  font-family: "微软雅黑", "eras demi itc";
+}
+
+img {
+  display: block;
+}
+
+ul,
+li,
+ol {
+  list-style: none;
+}
+
+/* ===============================================
+   页面布局和通用组件
+   =============================================== */
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.box div {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.list {
+  margin-right: 1rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.box .right {
+  margin-left: 0rem;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+/* ===============================================
+   头部导航区域
+   =============================================== */
+.box1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+}
+
+.box1 .box1_left {
+  background-color: #c9c9c9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box1 .box1_right {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.box1 .box1_right .box1_right_div {
+  background-color: #c9c9c9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.box1_right_div3 {
+  background-color: #c9c9c9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box1 img {
+  width: 2rem;
+}
+
+#img1 {
+  width: 1.9rem;
+}
+
+/* ===============================================
+   个人信息头部
+   =============================================== */
+.box2 {
+  display: flex;
+  align-items: center;
+  padding-top: 7rem;
+  padding-left: 0.5rem;
+  padding-bottom: 2rem;
+  position: relative;
+}
+
+/* 头像样式 */
+.box2 .avatar {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+
+/* 名字样式 */
+.box2 h2 {
+  color: #c98e34;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-right: 0.8rem;
+}
+
+/* 状态按钮 */
+.box2 button {
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  font-size: 0.6rem;
+  padding: 0.2rem;
+  height: 1.2rem;
+  width: 3rem;
+  background-color: #fff;
+  border: 1px solid #e9e8ea;
+  color: #3e4040;
+}
+
+.box2 button img {
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-right: 0.1rem;
+  margin-top: 0.1rem;
+}
+
+/* 点赞区域 */
+.box2 .good {
+  position: absolute;
+  background-color: #696669;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  right: 1rem;
+  bottom: 2rem;
+  min-width: 3.2rem;
+  border-radius: 1rem;
+  padding: 0.2rem 0.4rem;
+}
+
+.box2 .good img {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.3rem;
+}
+
+.box2 .good p {
+  font-size: 0.8rem;
+}
+
+/* ===============================================
+   QQ号码区域
+   =============================================== */
+.box3 section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 1rem;
+}
+
+.box3 section .i1 {
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  left: -0.3rem;
+  top: -0.3rem;
+  transform: rotate(315deg);
+}
+
+.box3 span {
+  display: block;
+  color: #c2a77d;
+  font-weight: 600;
+  background-color: #EDC386;
+  height: 15px;
+  font-style: italic;
+  border-bottom-left-radius: 1rem;
+  border-top-left-radius: 1rem;
+}
+
+.box3 div {
+  display: flex;
+  justify-content: flex-start !important;
+}
+
+.box3 .i3 {
+  width: auto;
+  height: 13px;
+  margin-left: .3rem;
+}
+
+.box3 .i2 {
+  margin-top: -3.875px;
+  margin-left: -3px;
+  width: auto;
+  height: 22.5px;
+}
+
+.box3 p {
+  height: 15px;
+  line-height: 15px;
+  background: linear-gradient(to right, #EDC386, #DAA45F);
+  border: 0;
+  color: #000000;
+  font-weight: 400;
+  padding: 0.01rem 0.3rem 0.3rem 0.1rem;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+/* ===============================================
+   个性签名和详情区域
+   =============================================== */
+.box4 {
+  display: flex;
+  align-items: center;
+}
+
+.box5 {
+  color: #252525;
+}
+
+/* ===============================================
+   会员图标和等级区域
+   =============================================== */
+.box7_right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start !important;
+  gap: 0;
+  /* 移除间距 */
+}
+
+.box7_right img {
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+/* 会员图标区域 */
+.box8 .box7_right img {
+  height: 2rem;
+  margin-right: 0.5rem;
+}
+
+.box8 .box7_right img:last-child {
+  height: 1rem;
+}
+
+/* ===============================================
+   故事容器样式
+   =============================================== */
+.story-container {
+  display: flex;
+  overflow-x: auto;
+  padding: 0.2rem 0 0.2rem 2.2rem;
+  margin-bottom: 1.5rem;
+  margin-top: -1rem;
+  width: 336.5px;
+  /* 隐藏滚动条 */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+  /* 默认隐藏整个故事容器 */
+  display: none;
+}
+
+/* 当有故事图片时显示容器 */
+.story-container.has-stories {
+  display: flex;
+}
+
+.story-container::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, and Opera */
+}
+
+.story-item {
+  flex: 0 0 auto;
+  width: 4.6rem;
+  height: 4.6rem;
+  margin-right: 0.12rem;
+  border-radius: 0px;
+  overflow: hidden;
+  position: relative;
+  background-color: #f1f1f7;
+  border: 0px solid #ddd;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+}
+
+/* 默认隐藏没有图片的story-item，但不隐藏添加按钮 */
+.story-item:not(.add-story) {
+  display: none;
+}
+
+.story-item.has-image {
+  display: block;
+  background-color: transparent;
+  border: none;
+}
+
+.story-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.add-story {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #f2f1f7;
+}
+
+.add-story-icon {
+  font-size: 3rem;
+  color: #2da6ec;
+  line-height: 1;
+}
+
+.add-story p {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #1296e5;
+}
+
+/* 完善资料区域 */
+.box10 div p:last-child {
+  color: #252525;
+}
+
+#p1 {
+  color: #8c8c8c;
+  font-size: 0.8rem;
+  margin-right: 5px;
+}
+
+/* ===============================================
+   底部按钮区域
+   =============================================== */
+.last {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  display: grid;
+  align-items: center;
+  justify-content: space-between;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2vw;
+  padding: 1rem;
+  /* 提供内边距，使按钮不贴边 */
+  z-index: 1000;
+  /* 确保位于其他元素之上 */
+}
+
+.last button {
+  width: 100%;
+  border: none;
+  border: 1.5px solid #d7d7d7;
+  height: 35%;
+  padding-bottom: 35%;
+  position: relative;
+  border-radius: 13px;
+  background-color: #fff;
+}
+
+.last span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-weight: 500;
+  color: #000;
+  font-size: 1rem;
+}
+
+.last button:last-child {
+  background-color: #0099ff;
+  border-color: #0099ff;
+}
+
+.last button:last-child span {
+  color: #fff !important;
+}
+
+/* ===============================================
+   等级图标容器样式
+   =============================================== */
+.level-container {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  height: 1rem;
+  letter-spacing: -2px;
+  /* 负字间距使图标更紧凑 */
+  font-size: 0;
+  /* 消除任何可能的间隙 */
+  white-space: nowrap;
+  /* 防止换行 */
+  margin-left: 4px;
+  /* 与其他图标保持适当间距 */
+}
+
+.level-container img {
+  height: 1rem;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0;
+  line-height: 0;
+  margin-right: -1px;
+  /* 负margin让图标靠得更近 */
+}
+
+/* 等级图标布局优化 */
+.box7_right .level-container {
+  margin-right: 0.2rem !important;
+}
+
+.box7_right .level-container img {
+  margin-right: 0 !important;
+}
+
+.box7_right img,
+.box7_right div {
+  margin-right: 0.2rem !important;
+}
+
+/* ===============================================
+   模态框样式
+   =============================================== */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  animation-name: animatetop;
+  animation-duration: 0.4s;
+}
+
+@keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0
+  }
+
+  to {
+    top: 0;
+    opacity: 1
+  }
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ===============================================
+   表单样式
+   =============================================== */
+#editForm label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+#editForm input[type="text"],
+#editForm input[type="file"],
+#editForm input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#editForm input[type="submit"] {
+  background-color: #007BFF;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#editForm input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* ===============================================
+   等级图标样式选择器
+   =============================================== */
+.icon-style-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.icon-style-label {
+  cursor: pointer;
+  border: 2px solid transparent;
+  padding: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  transition: all 0.3s;
+}
+
+.icon-style-label:hover {
+  background-color: #f0f0f0;
+}
+
+input[name="levelIconStyle"]:checked+.icon-style-label {
+  border-color: #007BFF;
+  background-color: #e6f3ff;
+}
+
+.style-preview {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+/* 隐藏实际的单选按钮 */
+input[name="levelIconStyle"] {
+  display: none;
+}
+
+/* ===============================================
+   VIP图片选择器样式
+   =============================================== */
+.vip-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.vip-label {
+  cursor: pointer;
+  border: 2px solid transparent;
+  padding: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  transition: all 0.3s;
+}
+
+.vip-label:hover {
+  background-color: #f0f0f0;
+}
+
+input[name="imageSelect"]:checked+.vip-label {
+  border-color: #007BFF;
+  background-color: #e6f3ff;
+}
+
+.vip-label img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+/* 隐藏实际的单选按钮 */
+input[name="imageSelect"] {
+  display: none;
+}
+
+/* ===============================================
+   个人信息头部补充样式
+   =============================================== */
+.profile-main {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.name-status-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.personal-details {
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.personal-details span {
+  padding: 0;
+  margin-right: 0.5rem;
+}

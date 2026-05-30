@@ -1,0 +1,2159 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QQ资料卡</title>
+        <!-- iOS添加到主屏幕图标设置 -->
+  <link rel="apple-touch-icon" href="img/QQ.png">
+  <link rel="apple-touch-icon-precomposed" href="img/QQ.png">
+  <meta name="apple-mobile-web-app-title" content="QQ">
+    <link rel="stylesheet" href="style.css">
+    <!-- 内联样式：等级图标容器 -->
+    <style>
+        /* 等级图标容器样式 */
+        .qq-level-icons {
+            display: inline-flex !important;
+            align-items: center !important;
+            height: 16px !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            font-size: 0 !important;
+            white-space: nowrap !important;
+        }
+
+        .qq-level-icons img {
+            height: 16px !important;
+            width: 16px !important;
+            display: inline-block !important;
+            padding: 0 !important;
+            border: none !important;
+            vertical-align: middle !important;
+        }
+
+        /* 确保包装元素的间距 */
+        .qq-level-icons span {
+            margin-right: 3px !important;
+            display: inline-block !important;
+            font-size: 0 !important;
+        }
+
+        /* 修复图标间距样式 - 与handoff.css完全一致 */
+        .box7 .box7_right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start !important;
+            gap: 0;
+            /* 移除间距 */
+        }
+        
+        .box7 .box7_right img {
+            height: 1rem;
+            margin-right: 0.5rem;
+        }
+        
+        /* 会员图标区域 - 统一尺寸为32x32像素 */
+        .box8 .box7_right {
+            gap: 0.25rem; /* 使用gap来控制间距 */
+        }
+        
+        .box8 .box7_right img {
+            width: 2rem;
+            height: 2rem;
+            margin-right: 0; /* 移除margin-right */
+            object-fit: contain;
+        }
+        
+        /* 灰色图标缩小 */
+        .box8 .box7_right img[src*="/box7_right/"] {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        
+        /* 最后一个图标保持较小尺寸 - 统一为16x16像素，无右边距 */
+        .box8 .box7_right img:last-child {
+            width: 1rem;
+            height: 1rem;
+        }
+        
+        /* 确保box7_right内的其他元素间距正常，但不影响会员图标 */
+        .box7 .box7_right>*:not(.level-container):not(img) {
+            margin-right: 0.5rem !important;
+        }
+
+        /* 动态图标选择器布局 */
+        .dynamic-icon-selector {
+            display: flex;
+            flex-wrap: nowrap;
+            /* Prevent wrapping */
+            overflow-x: auto;
+            /* Enable horizontal scrolling */
+            gap: 10px;
+            margin-top: 10px;
+            padding-bottom: 10px;
+            /* Add some padding for scrollbar */
+        }
+
+        .dynamic-icon-selector label {
+            display: block;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .dynamic-icon-selector input[type="radio"]:checked+label {
+            border-color: #12b7f5;
+            /* Highlight selected icon */
+        }
+
+        .dynamic-icon-selector img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .box8 .box7_right {
+            overflow-x: hidden;
+            white-space: nowrap;
+        }
+
+        /* 拖拽图标样式 */
+        .draggable-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            margin: 4px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #f9f9f9;
+            user-select: none;
+        }
+
+        .draggable-icon.selected {
+            border-color: #4CAF50;
+            background-color: #e8f5e8;
+        }
+
+        .draggable-icon.unselected {
+            border-color: #ccc;
+            background-color: #f0f0f0;
+            opacity: 0.6;
+        }
+
+        .draggable-icon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .draggable-icon span {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .draggable-icon small {
+            color: #666;
+            font-size: 10px;
+            display: block;
+        }
+
+        .draggable-icon img {
+            pointer-events: none;
+        }
+
+        .icon-group {
+            margin: 8px 0;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 8px;
+            background-color: #fafafa;
+        }
+
+        .icon-versions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+
+
+        /* VIP Icon Customizer Styles */
+        #vip-icon-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+            padding: 5px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .vip-icon-checkbox-label {
+            display: inline-block;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            padding: 4px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .vip-icon-checkbox-label img {
+            width: 32px;
+            height: 32px;
+            vertical-align: middle;
+        }
+
+        .vip-icon-checkbox-label input {
+            display: none;
+        }
+
+        .vip-icon-checkbox-label.checked {
+            border-color: #12b7f5;
+        }
+
+
+        /* 大V图标选择器样式 */
+        .vip-badges-selector {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .vip-badge-option {
+            position: relative;
+            flex: 0 0 auto;
+        }
+
+        .vip-badge-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .vip-badge-option label {
+            display: block;
+            padding: 5px;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .vip-badge-option input[type="radio"]:checked+label {
+            border-color: #12b7f5;
+            background-color: rgba(18, 183, 245, 0.1);
+        }
+
+        #age:not(:empty)::after {
+            content: "岁";
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <!-- 页面顶部导航区 -->
+    <div class="box1">
+        <div class="box1_left">
+            <img src="./img/18.png" alt="返回">
+        </div>
+        <div class="box1_right">
+            <div class="box1_right_div">
+                <img src="./img/二维码.jpg" alt="二维码">
+            </div>
+            <div class="box1_right_div">
+                <img src="./img/17.2.png" id="img1" alt="闹铃">
+            </div>
+            <div class="box1_right_div3">
+                <img src="./img/17.png" alt="菜单">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 个人资料头部区域 -->
+    <div class="box2">
+        <div class="profile-main">
+            <!-- 头像 -->
+            <img src="./img/image7.png" id="avatar" class="avatar" alt="头像">
+            <div class="user-info">
+                <div class="name-status-row">
+                    <!-- 名字 -->
+                    <h2 id="name"></h2>
+                    <!-- 状态按钮 -->
+                    <button>
+                        <img src="./img/14.png" alt="状态图标">
+                        <p>状态</p>
+                    </button>
+                </div>
+                <!-- 性别、年龄、省份、城市 -->
+                <div class="personal-details">
+                    <span id="gender"></span>
+                    <span id="age"></span>
+                    <span id="province"></span>
+                    <span id="city"></span>
+                </div>
+            </div>
+        </div>
+        <!-- 点赞数 -->
+        <div class="good">
+            <img src="./img/good.png" alt="点赞">
+            <p id="good"></p>
+        </div>
+    </div>
+
+    <!-- QQ号码区域 -->
+    <div class="box box3">
+        <img src="./img/6.png" class="list" alt="QQ图标">
+        <div>
+            <section>
+                <!-- 靓号图标 -->
+                <span>
+                    <img src="./img/35.png" class="i2" id="img19" alt="">
+                </span>
+
+                <!-- 这是QQ号 -->
+                <p id="qq_number">1234567</p>
+            </section>
+            <img src="./img/20.png" class="i3" alt="">
+        </div>
+    </div>
+
+    <!-- 公司图标区域 -->
+    <div class="box box4" style="display: none;">
+        <img src="./img/7.png" class="list" alt="签名图标">
+        <div>
+            <p id="sign"></p>
+        </div>
+    </div>
+
+    <!-- 详细资料区域 -->
+    <div class="box box5">
+        <img src="./img/7.png" style="opacity: 0" class="list" alt="">
+        <div>
+            <p>详细资料</p>
+        </div>
+        <img src="./img/15.png" class="right" alt="箭头">
+    </div>
+
+    <!-- 个性签名区域 -->
+    <div class="box box6">
+        <img src="./img/5.png" class="list" alt="编辑图标">
+        <div>
+            <p>编辑个签，展示我的独特态度</p>
+        </div>
+        <img src="./img/15.png" class="right" alt="箭头">
+    </div>
+
+    <!-- 等级信息区域 -->
+    <div class="box box7">
+        <img src="./img/4.png" class="list" alt="等级图标">
+        <div class="box7_right">
+            <img id="energyIcon" src="./img/33.png" alt="能量值图标">
+            <!-- 大V图标组 - 通过JavaScript控制显示/隐藏，默认隐藏 -->
+            <img src="./img/1.webp" alt="大V图标1" style="display: none;">
+            <img src="./img/2.webp" alt="大V图标2" style="display: none;">
+            <img src="./img/3.webp" alt="大V图标3" style="display: none;">
+            <img src="./img/4.webp" alt="大V图标4" style="display: none;">
+            <img src="./img/9.gif" id="dynamicIcon" alt="动态图标">
+            <!-- 等级图标容器 -->
+            <span id="levelIconContainer" class="level-container qq-level-icons"></span>
+            <img src="./img/IMG_9007.png" alt="勋章" style="height: 1rem; margin-left: 0.2rem;">
+        </div>
+        <img src="./img/15.png" class="right" alt="箭头">
+    </div>
+
+    <!-- 会员图标区域 -->
+    <div class="box box8">
+        <img src="./img/3.png" class="list" alt="会员图标">
+        <div class="box7_right" id="vip-icons-container">
+            <img id="vip-icon-1" src="./img/大会员.png" data-color-src="./img/大会员.png"
+                data-gray-src="./img/box7_right/1.png" alt="大会员" style="display: none;">
+            <img id="vip-icon-2" src="./img/21.png" data-color-src="./img/21.png"
+                data-gray-src="./img/box7_right/2.png" alt="会员图标1" style="display: none;">
+            <img id="vip-icon-3" src="./img/22.png" data-color-src="./img/22.png"
+                data-gray-src="./img/box7_right/3.png" alt="会员图标2" style="display: none;">
+            <img id="vip-icon-4" src="./img/23.png" data-color-src="./img/23.png"
+                data-gray-src="./img/box7_right/4.png" alt="会员图标3" style="display: none;">
+            <img id="vip-icon-5" src="./img/31.png" data-color-src="./img/31.png"
+                data-gray-src="./img/box7_right/5.png" alt="会员图标4" style="display: none;">
+            <img id="vip-icon-6" src="./img/39.png" data-color-src="./img/39.png"
+                data-gray-src="./img/box7_right/6.png" alt="会员图标5" style="display: none;">
+            <img id="vip-icon-7" src="./img/36.png" data-color-src="./img/36.png"
+                data-gray-src="./img/box7_right/7.png" alt="会员图标6" style="display: none;">
+            <img id="vip-icon-8" src="./img/37.png" data-color-src="./img/37.png"
+                data-gray-src="./img/box7_right/8.png" alt="会员图标7" style="display: none;">
+            <img id="vip-icon-9" src="./img/38.png" data-color-src="./img/38.png"
+                data-gray-src="./img/box7_right/9.png" alt="会员图标8" style="display: none;">
+            <img id="vip-icon-10" src="./img/25.png" data-color-src="./img/25.png"
+                data-gray-src="./img/box7_right/10.png" alt="装饰图标1" style="display: none;">
+            <img id="vip-icon-11" src="./img/25.1.png" data-color-src="./img/25.1.png"
+                data-gray-src="./img/box7_right/11.png" alt="装饰图标2" style="display: none;">
+            <img id="vip-icon-12" src="./img/26.png" data-color-src="./img/26.png"
+                data-gray-src="./img/box7_right/12.png" alt="装饰图标3" style="display: none;">
+            <img id="vip-icon-13" src="./img/27.png" data-color-src="./img/27.png" data-gray-src="" alt="装饰图标4"
+                style="display: none;">
+            <img id="vip-icon-14" src="./img/28.png" data-color-src="./img/28.png" data-gray-src="" alt="装饰图标5"
+                style="display: none;">
+            <img id="vip-icon-15" src="./img/29.png" data-color-src="./img/29.png" data-gray-src="" alt="装饰图标6"
+                style="display: none;">
+            <img id="vip-icon-16" src="./img/大会员2.png" data-color-src="./img/大会员2.png"
+                data-gray-src="./img/box7_right/16.png" alt="大会员2" style="display: none;">
+            <img id="vip-icon-17" src="./img/大会员3.png" data-color-src="./img/大会员3.png"
+                data-gray-src="./img/box7_right/17.png" alt="大会员3" style="display: none;">
+            <img id="vip-icon-18" src="./img/大会员4.png" data-color-src="./img/大会员4.png"
+                data-gray-src="./img/box7_right/18.png" alt="大会员4" style="display: none;">
+            <img id="vip-icon-19" src="./img/大会员5.png" data-color-src="./img/大会员5.png"
+                data-gray-src="./img/box7_right/19.png" alt="大会员5" style="display: none;">
+            <img id="vip-icon-20" src="./img/黄钻1.png" data-color-src="./img/黄钻1.png"
+                data-gray-src="./img/box7_right/20.png" alt="黄钻图标1" style="display: none;">
+            <img id="vip-icon-21" src="./img/黄钻2.png" data-color-src="./img/黄钻2.png"
+                data-gray-src="./img/box7_right/21.png" alt="黄钻图标2" style="display: none;">
+        </div>
+        <img src="./img/15.png" class="right" alt="箭头">
+    </div>
+
+    <!-- QQ空间区域 -->
+    <div class="box box9">
+        <img src="./img/2.png" class="list" alt="空间图标">
+        <div>
+            <p>我的QQ空间</p>
+        </div>
+        <img src="./img/15.png" class="right" alt="箭头">
+    </div>
+
+    <!-- 动态故事容器 -->
+    <div class="story-container">
+        <div class="story-item add-story">
+            <img src="./img/story_bg.jpg" alt="发表新鲜事">
+        </div>
+        <div class="story-item">
+            <img id="storyImage1" alt="Story Image 1">
+        </div>
+        <div class="story-item">
+            <img id="storyImage2" alt="Story Image 2">
+        </div>
+        <div class="story-item">
+            <img id="storyImage3" alt="Story Image 3">
+        </div>
+        <div class="story-item">
+            <img id="storyImage4" alt="Story Image 4">
+        </div>
+    </div>
+
+    <!-- 完善资料区域 -->
+    <div class="box box10">
+        <img src="./img/1.png" class="list" alt="资料图标">
+        <div>
+            <p>完善资料，让好友更了解你</p>
+            <p id="p1">去完善</p>
+        </div>
+        <img src="./img/15.png" class="right" alt="箭头">
+    </div>
+
+    <!-- 底部按钮区域 -->
+    <div class="last">
+        <button>
+            <span>个性名片</span>
+        </button>
+        <button>
+            <span>编辑资料</span>
+        </button>
+        <button id="editButton">
+            <span>发消息</span>
+        </button>
+    </div>
+
+    <!-- 编辑资料弹窗 -->
+    <div id="editModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <form id="editForm">
+                <!-- 基本信息编辑区域 -->
+                <label for="avatarInput">头像:</label>
+                <input type="file" id="avatarInput" accept="image/*">
+
+                <label for="nameInput">名字:</label>
+                <input type="text" id="nameInput">
+
+                <label for="goodInput">点赞:</label>
+                <input type="text" id="goodInput">
+
+                <label for="qqNumberInput">QQ号:</label>
+                <input type="text" id="qqNumberInput">
+
+                <label for="genderInput">性别:</label>
+                <input type="text" id="genderInput">
+
+                <label for="ageInput">年龄:</label>
+                <input type="text" id="ageInput">
+
+                <label for="provinceInput">省份:</label>
+                <input type="text" id="provinceInput">
+
+                <label for="cityInput">城市:</label>
+                <input type="text" id="cityInput">
+
+                <label for="personalSignInput">个性签名:</label>
+                <input type="text" id="personalSignInput">
+
+                <label for="levelInput">QQ等级:</label>
+                <input type="number" id="levelInput" min="1" max="256" placeholder="输入等级(1-256)">
+
+                <!-- 等级图标样式选择器 -->
+                <label>选择等级图标样式:</label>
+                <div class="icon-style-selector">
+                    <input type="radio" id="styleRadio1" name="levelIconStyle" value="1" checked>
+                    <label for="styleRadio1" class="icon-style-label">
+                        <img src="./img/crown.png" class="style-preview" alt="样式1">
+                    </label>
+
+                    <input type="radio" id="styleRadio2" name="levelIconStyle" value="2">
+                    <label for="styleRadio2" class="icon-style-label">
+                        <img src="./img/crown2.png" class="style-preview" alt="样式2">
+                    </label>
+
+                    <input type="radio" id="styleRadio3" name="levelIconStyle" value="3">
+                    <label for="styleRadio3" class="icon-style-label">
+                        <img src="./img/crown3.png" class="style-preview" alt="样式3">
+                    </label>
+
+                    <input type="radio" id="styleRadio4" name="levelIconStyle" value="4">
+                    <label for="styleRadio4" class="icon-style-label">
+                        <img src="./img/crown4.png" class="style-preview" alt="样式4">
+                    </label>
+
+                    <input type="radio" id="styleRadio5" name="levelIconStyle" value="5">
+                    <label for="styleRadio5" class="icon-style-label">
+                        <img src="./img/crown5.png" class="style-preview" alt="样式5">
+                    </label>
+                </div>
+
+                <!-- 动态图标选择器 -->
+                <label>选择动态图标:</label>
+                <div class="dynamic-icon-selector">
+                    <input type="radio" id="dynamicIcon9gifRadio" name="dynamicIconSelect" value="./img/9.gif" checked>
+                    <label for="dynamicIcon9gifRadio" class="dynamic-icon-label">
+                        <img src="./img/9.gif" class="style-preview" alt="动态图标1">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon9pngRadio" name="dynamicIconSelect" value="./img/vip/9.png">
+                    <label for="dynamicIcon9pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/9.png" class="style-preview" alt="动态图标2">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon9_1pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/9 (1).png">
+                    <label for="dynamicIcon9_1pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/9 (1).png" class="style-preview" alt="动态图标3">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10pngRadio" name="dynamicIconSelect" value="./img/vip/10.png">
+                    <label for="dynamicIcon10pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10.png" class="style-preview" alt="动态图标4">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_1pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (1).png">
+                    <label for="dynamicIcon10_1pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (1).png" class="style-preview" alt="动态图标5">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_2pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (2).png">
+                    <label for="dynamicIcon10_2pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (2).png" class="style-preview" alt="动态图标6">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_3pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (3).png">
+                    <label for="dynamicIcon10_3pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (3).png" class="style-preview" alt="动态图标7">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_4pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (4).png">
+                    <label for="dynamicIcon10_4pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (4).png" class="style-preview" alt="动态图标8">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_5pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (5).png">
+                    <label for="dynamicIcon10_5pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (5).png" class="style-preview" alt="动态图标9">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_6pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (6).png">
+                    <label for="dynamicIcon10_6pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (6).png" class="style-preview" alt="动态图标10">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_7pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (7).png">
+                    <label for="dynamicIcon10_7pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (7).png" class="style-preview" alt="动态图标11">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_8pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (8).png">
+                    <label for="dynamicIcon10_8pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (8).png" class="style-preview" alt="动态图标12">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_9pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (9).png">
+                    <label for="dynamicIcon10_9pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (9).png" class="style-preview" alt="动态图标13">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_10pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (10).png">
+                    <label for="dynamicIcon10_10pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (10).png" class="style-preview" alt="动态图标14">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_11pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (11).png">
+                    <label for="dynamicIcon10_11pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (11).png" class="style-preview" alt="动态图标15">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_12pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (12).png">
+                    <label for="dynamicIcon10_12pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (12).png" class="style-preview" alt="动态图标16">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_13pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (13).png">
+                    <label for="dynamicIcon10_13pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (13).png" class="style-preview" alt="动态图标17">
+                    </label>
+
+                    <input type="radio" id="dynamicIcon10_14pngRadio" name="dynamicIconSelect"
+                        value="./img/vip/10 (14).png">
+                    <label for="dynamicIcon10_14pngRadio" class="dynamic-icon-label">
+                        <img src="./img/vip/10 (14).png" class="style-preview" alt="动态图标18">
+                    </label>
+                </div>
+
+                <!-- 能量值图标选择 -->
+                <label>能量值图标选择:</label>
+                <div class="energy-icon-selector" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
+                    <div class="energy-icon-option">
+                        <input type="radio" id="energyIconDefault" name="energyIconSelect" value="./img/33.png" checked>
+                        <label for="energyIconDefault">
+                            <img src="./img/33.png" class="style-preview" alt="默认能量值">
+                        </label>
+                    </div>
+                    <div class="energy-icon-option">
+                        <input type="radio" id="energyIconValue1" name="energyIconSelect" value="./img/value/IMG_1.png">
+                        <label for="energyIconValue1">
+                            <img src="./img/value/IMG_1.png" class="style-preview" alt="能量值1">
+                        </label>
+                    </div>
+                    <div class="energy-icon-option">
+                        <input type="radio" id="energyIconValue2" name="energyIconSelect" value="./img/value/IMG_2.png">
+                        <label for="energyIconValue2">
+                            <img src="./img/value/IMG_2.png" class="style-preview" alt="能量值2">
+                        </label>
+                    </div>
+                    <div class="energy-icon-option">
+                        <input type="radio" id="energyIconValue3" name="energyIconSelect" value="./img/value/IMG_3.png">
+                        <label for="energyIconValue3">
+                            <img src="./img/value/IMG_3.png" class="style-preview" alt="能量值3">
+                        </label>
+                    </div>
+                    <div class="energy-icon-option">
+                        <input type="radio" id="energyIconValue4" name="energyIconSelect" value="./img/value/IMG_4.png">
+                        <label for="energyIconValue4">
+                            <img src="./img/value/IMG_4.png" class="style-preview" alt="能量值4">
+                        </label>
+                    </div>
+                    <div class="energy-icon-option">
+                        <input type="radio" id="energyIconValue5" name="energyIconSelect" value="./img/value/IMG_5.png">
+                        <label for="energyIconValue5">
+                            <img src="./img/value/IMG_5.png" class="style-preview" alt="能量值5">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 大V图标选择 -->
+                <label>大V图标选择:</label>
+                <div class="vip-badges-selector">
+                    <div class="vip-badge-option">
+                        <input type="radio" id="vipBadge1" name="vipBadges" value="1">
+                        <label for="vipBadge1">
+                            <img src="./img/1.webp" alt="大V图标1" style="width: 80px; height: 30px;">
+                        </label>
+                    </div>
+                    <div class="vip-badge-option">
+                        <input type="radio" id="vipBadge2" name="vipBadges" value="2">
+                        <label for="vipBadge2">
+                            <img src="./img/2.webp" alt="大V图标2" style="width: 80px; height: 30px;">
+                        </label>
+                    </div>
+                    <div class="vip-badge-option">
+                        <input type="radio" id="vipBadge3" name="vipBadges" value="3">
+                        <label for="vipBadge3">
+                            <img src="./img/3.webp" alt="大V图标3" style="width: 80px; height: 30px;">
+                        </label>
+                    </div>
+                    <div class="vip-badge-option">
+                        <input type="radio" id="vipBadge4" name="vipBadges" value="4">
+                        <label for="vipBadge4">
+                            <img src="./img/4.webp" alt="大V图标4" style="width: 80px; height: 30px;">
+                        </label>
+                    </div>
+                    <div class="vip-badge-option">
+                        <input type="radio" id="vipBadgeNone" name="vipBadges" value="none" checked>
+                        <label for="vipBadgeNone">
+                            无图标
+                        </label>
+                    </div>
+                </div>
+
+                <!-- VIP图片选择器 -->
+                <label>会员图标自定义:</label>
+                <div id="vip-icon-customizer">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+                        <select id="vipIconDisplayMode" style="padding: 5px; border-radius: 5px;">
+                            <option value="color">仅彩色</option>
+                            <option value="gray">仅灰色</option>
+                            <option value="mixed">混合模式</option>
+                        </select>
+                        <button type="button" id="vipIconSelectAll"
+                            style="padding: 5px 10px; border-radius: 5px; border: 1px solid #ccc; cursor: pointer;">全选</button>
+                        <button type="button" id="vipIconDeselectAll"
+                            style="padding: 5px 10px; border-radius: 5px; border: 1px solid #ccc; cursor: pointer;">全不选</button>
+                        <button type="button" id="resetToDefault"
+                            style="padding: 5px 10px; border-radius: 5px; border: 1px solid #ccc; cursor: pointer;">恢复默认</button>
+                    </div>
+                    
+                    <!-- 显示顺序设置 -->
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: bold; margin-bottom: 5px; display: block;">显示顺序设置:</label>
+                        <div id="vip-icon-order-list" style="border: 1px solid #ddd; padding: 10px; border-radius: 5px; min-height: 100px; background-color: #f9f9f9;">
+                            <!-- 可拖拽的图标列表将在这里显示 -->
+                        </div>
+
+                    </div>
+                    
+                    <div id="vip-icon-checkboxes" style="display: none;">
+                        <!-- 原始的复选框界面保留但隐藏 -->
+                    </div>
+                </div>
+
+
+                <!-- 故事图片上传 -->
+                <label>故事图片:</label>
+                <label for="storyImageInput1" style="font-weight: normal;">图片 1:</label>
+                <input type="file" id="storyImageInput1" accept="image/*">
+                <label for="storyImageInput2" style="font-weight: normal;">图片 2:</label>
+                <input type="file" id="storyImageInput2" accept="image/*">
+                <label for="storyImageInput3" style="font-weight: normal;">图片 3:</label>
+                <input type="file" id="storyImageInput3" accept="image/*">
+                <label for="storyImageInput4" style="font-weight: normal;">图片 4:</label>
+                <input type="file" id="storyImageInput4" accept="image/*">
+
+                <!-- 布局切换按钮 -->
+                <button type="button" id="switchLayoutButton" style="margin-top: 15px; padding: 10px 20px; background-color: #ff6b6b; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%; margin-bottom: 10px;">切换到新版布局</button>
+
+                <!-- 区域显示控制 -->
+                <label>区域显示控制:</label>
+                <div style="margin-bottom: 15px;">
+                    <label>
+                        <input type="checkbox" id="showBox7" checked>
+                        显示等级区域
+                    </label>
+                </div>
+
+                <input type="submit" value="保存">
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript代码 -->
+    <script>
+        const vipIconsConfig = [
+            // 大会员图标组 (main类别，优先级最高)
+            { id: 'vip-icon-1', name: '大会员', colorSrc: './img/大会员.png', graySrc: './img/box7_right/1.png', category: 'main', defaultOrder: 1 },
+            { id: 'vip-icon-16', name: '大会员2', colorSrc: './img/member/40.png', graySrc: '', category: 'main', defaultOrder: 0 },
+            { id: 'vip-icon-17', name: '大会员3', colorSrc: './img/member/41.png', graySrc: '', category: 'main', defaultOrder: 0 },
+            { id: 'vip-icon-18', name: '大会员4', colorSrc: './img/member/42.png', graySrc: '', category: 'main', defaultOrder: 0 },
+            { id: 'vip-icon-19', name: '大会员5', colorSrc: './img/member/43.png', graySrc: '', category: 'main', defaultOrder: 0 },
+            
+            // 会员图标组 (member类别，只能选择一个显示)
+            { id: 'vip-icon-2', name: '会员图标1', colorSrc: './img/21.png', graySrc: './img/box7_right/2.png', category: 'member', defaultOrder: 2 },
+            { id: 'vip-icon-3', name: '会员图标2', colorSrc: './img/22.png', graySrc: './img/box7_right/3.png', category: 'member', defaultOrder: 0 },
+            { id: 'vip-icon-4', name: '会员图标3', colorSrc: './img/23.png', graySrc: './img/box7_right/4.png', category: 'member', defaultOrder: 0 },
+            { id: 'vip-icon-5', name: '会员图标4', colorSrc: './img/31.png', graySrc: './img/box7_right/5.png', category: 'member', defaultOrder: 0 },
+            { id: 'vip-icon-6', name: '会员图标5', colorSrc: './img/39.png', graySrc: './img/box7_right/6.png', category: 'member', defaultOrder: 0 },
+            { id: 'vip-icon-7', name: '会员图标6', colorSrc: './img/36.png', graySrc: './img/box7_right/7.png', category: 'member', defaultOrder: 0 },
+            { id: 'vip-icon-8', name: '会员图标7', colorSrc: './img/37.png', graySrc: './img/box7_right/8.png', category: 'member', defaultOrder: 0 },
+            { id: 'vip-icon-9', name: '会员图标8', colorSrc: './img/38.png', graySrc: './img/box7_right/9.png', category: 'member', defaultOrder: 0 },
+            
+            // 黄钻图标组 (yellow_diamond类别)
+            { id: 'vip-icon-20', name: '黄钻1', colorSrc: './img/member/3.png', graySrc: '', category: 'yellow_diamond', defaultOrder: 0 },
+            { id: 'vip-icon-21', name: '黄钻2', colorSrc: './img/member/5.png', graySrc: '', category: 'yellow_diamond', defaultOrder: 0 },
+            
+            // 装饰图标组 (decoration类别，默认全部显示)
+            { id: 'vip-icon-10', name: '装饰图标1', colorSrc: './img/25.png', graySrc: './img/box7_right/10.png', category: 'decoration', defaultOrder: 3 },
+            { id: 'vip-icon-11', name: '装饰图标2', colorSrc: './img/25.1.png', graySrc: './img/box7_right/11.png', category: 'decoration', defaultOrder: 4 },
+            { id: 'vip-icon-12', name: '装饰图标3', colorSrc: './img/26.png', graySrc: './img/box7_right/12.png', category: 'decoration', defaultOrder: 5 },
+            { id: 'vip-icon-13', name: '装饰图标4', colorSrc: './img/27.png', graySrc: '', category: 'decoration', defaultOrder: 6 },
+            { id: 'vip-icon-14', name: '装饰图标5', colorSrc: './img/28.png', graySrc: '', category: 'decoration', defaultOrder: 7 },
+            { id: 'vip-icon-15', name: '装饰图标6', colorSrc: './img/29.png', graySrc: '', category: 'decoration', defaultOrder: 8 },
+        ];
+
+        let vipIconState = {
+            displayMode: 'color', // 'color', 'gray', 'mixed'
+            selectedIcons: [], // 选中的图标ID列表，按显示顺序排列 
+            selectedIconVersions: {}, // 记录每个图标选择的版本：{iconId: 'color'|'gray'}
+            isCustom: false   // 是否为自定义模式
+        };
+
+        // 默认显示配置
+        const defaultDisplayConfig = {
+            color: {
+                // 仅彩色模式：大会员图标 + 第一个会员图标 + 所有装饰图标
+                icons: ['vip-icon-1', 'vip-icon-2', 'vip-icon-10', 'vip-icon-11', 'vip-icon-12', 'vip-icon-13', 'vip-icon-14', 'vip-icon-15'],
+                versions: {} // 全部使用彩色版本
+            },
+            gray: {
+                // 仅灰色模式：按1.png, 2.png, 3.png... 的顺序显示所有有灰色版本的图标
+                icons: ['vip-icon-1', 'vip-icon-2', 'vip-icon-3', 'vip-icon-4', 'vip-icon-5', 'vip-icon-6', 'vip-icon-7', 'vip-icon-8', 'vip-icon-9', 'vip-icon-10', 'vip-icon-11', 'vip-icon-12'],
+                versions: {} // 全部使用灰色版本
+            },
+            mixed: {
+                // 混合模式：彩色图标在前，然后是灰色图标
+                icons: ['vip-icon-1', 'vip-icon-2', 'vip-icon-10', 'vip-icon-11', 'vip-icon-12', 'vip-icon-13', 'vip-icon-14', 'vip-icon-15'],
+                versions: {
+                    'vip-icon-1': 'color',
+                    'vip-icon-2': 'color', 
+                    'vip-icon-10': 'color',
+                    'vip-icon-11': 'color',
+                    'vip-icon-12': 'color',
+                    'vip-icon-13': 'color',
+                    'vip-icon-14': 'color',
+                    'vip-icon-15': 'color'
+                }
+            }
+        };
+
+        /**
+         * 页面加载完成后初始化
+         */
+        document.addEventListener("DOMContentLoaded", () => {
+            // 从本地存储加载用户数据
+            loadUserData();
+
+            // 初始化事件监听
+            initEventListeners();
+            
+            // 初始化VIP图标显示
+            updateVipIconsDisplay();
+        });
+
+        /**
+         * 初始化所有事件监听器
+         */
+        function initEventListeners() {
+            // VIP图标选择事件
+            initVipIconCustomizationEvents();
+
+            // 等级图标样式选择事件
+            initLevelIconStyleEvents();
+
+            // 编辑表单事件
+            initEditFormEvents();
+
+            // 个性签名区域点击事件
+            initPersonalSignEvents();
+
+            // 动态图标选择事件
+            initDynamicIconSelectionEvents();
+
+            // 大V图标选择事件
+            initVipBadgesEvents();
+
+            // 布局切换事件
+            initLayoutSwitchEvents();
+
+            // 能量值图标选择事件
+            initEnergyIconSelectionEvents();
+
+            // 区域显示控制事件
+            initAreaVisibilityEvents();
+
+            // 编辑资料按钮事件
+            initEditProfileButtonEvents();
+        }
+
+        /**
+         * 初始化会员图标自定义功能
+         */
+        function initVipIconCustomizationEvents() {
+            // 初始化默认状态
+            resetToDefaultDisplay();
+            
+            // 渲染可拖拽的图标列表
+            renderIconOrderList();
+            
+            // 显示模式切换事件
+            document.getElementById('vipIconDisplayMode').addEventListener('change', (e) => {
+                const wasCustom = vipIconState.isCustom;
+                vipIconState.displayMode = e.target.value;
+                
+                if (!wasCustom) {
+                    // 如果不是自定义模式，重置为对应模式的默认配置
+                    resetToDefaultDisplay();
+                    renderIconOrderList();
+                }
+                updateVipIconsDisplay();
+            });
+
+            // 全选按钮
+            document.getElementById('vipIconSelectAll').addEventListener('click', () => {
+                vipIconState.isCustom = true;
+                if (vipIconState.displayMode === 'gray') {
+                    // 灰色模式下只选择有灰色版本的图标
+                    vipIconState.selectedIcons = vipIconsConfig
+                        .filter(icon => icon.graySrc)
+                        .map(icon => icon.id);
+                } else {
+                    // 其他模式选择所有图标
+                    vipIconState.selectedIcons = vipIconsConfig.map(icon => icon.id);
+                }
+                renderIconOrderList();
+                updateVipIconsDisplay();
+            });
+
+            // 全不选按钮
+            document.getElementById('vipIconDeselectAll').addEventListener('click', () => {
+                vipIconState.isCustom = true;
+                vipIconState.selectedIcons = [];
+                renderIconOrderList();
+                updateVipIconsDisplay();
+            });
+
+            // 恢复默认按钮
+            document.getElementById('resetToDefault').addEventListener('click', () => {
+                resetToDefaultDisplay();
+                renderIconOrderList();
+                updateVipIconsDisplay();
+            });
+        }
+
+        /**
+         * 重置到默认显示状态
+         */
+        function resetToDefaultDisplay() {
+            vipIconState.isCustom = false;
+            const config = defaultDisplayConfig[vipIconState.displayMode];
+            vipIconState.selectedIcons = [...config.icons];
+            vipIconState.selectedIconVersions = {...config.versions};
+        }
+
+        /**
+         * 渲染可拖拽的图标列表
+         */
+        function renderIconOrderList() {
+            const container = document.getElementById('vip-icon-order-list');
+            const displayMode = vipIconState.displayMode;
+            
+            if (displayMode === 'mixed') {
+                // 混合模式：先显示所有彩色图标，再显示所有灰色图标
+                const colorIcons = [];
+                const grayIcons = [];
+                
+                vipIconsConfig.forEach(icon => {
+                    const isSelected = vipIconState.selectedIcons.includes(icon.id);
+                    const versions = vipIconState.selectedIconVersions[icon.id] || [];
+                    const versionsArray = Array.isArray(versions) ? versions : [versions].filter(v => v);
+                    const colorSelected = isSelected && versionsArray.includes('color');
+                    const graySelected = isSelected && versionsArray.includes('gray');
+                    
+                    // 彩色图标
+                    colorIcons.push(`
+                        <div class="draggable-icon ${colorSelected ? 'selected' : 'unselected'}" 
+                             data-icon-id="${icon.id}" 
+                             data-version="color"
+                             draggable="true">
+                            <img src="${icon.colorSrc}" alt="${icon.name}" style="width: 32px; height: 32px; object-fit: contain;">
+                            <span>${icon.name}(彩)</span>
+                            ${icon.category === 'main' ? '<small>(大会员图标组)</small>' : icon.category === 'member' ? '<small>(会员图标组)</small>' : icon.category === 'yellow_diamond' ? '<small>(黄钻图标组)</small>' : ''}
+                        </div>
+                    `);
+                    
+                    // 灰色图标（只有存在灰色版本的才添加）
+                    if (icon.graySrc) {
+                        grayIcons.push(`
+                            <div class="draggable-icon ${graySelected ? 'selected' : 'unselected'}" 
+                                 data-icon-id="${icon.id}" 
+                                 data-version="gray"
+                                 draggable="true">
+                                <img src="${icon.graySrc}" alt="${icon.name}" style="width: 32px; height: 32px; object-fit: contain;">
+                                <span>${icon.name}(灰)</span>
+                                ${icon.category === 'main' ? '<small>(大会员图标组)</small>' : icon.category === 'member' ? '<small>(会员图标组)</small>' : icon.category === 'yellow_diamond' ? '<small>(黄钻图标组)</small>' : ''}
+                            </div>
+                        `);
+                    }
+                });
+                
+                // 先显示彩色图标，再显示灰色图标
+                container.innerHTML = `
+                    <div class="color-section">
+                        <h4 style="margin: 10px 0; color: #666;">彩色图标</h4>
+                        ${colorIcons.join('')}
+                    </div>
+                    <div class="gray-section">
+                        <h4 style="margin: 10px 0; color: #666;">灰色图标</h4>
+                        ${grayIcons.join('')}
+                    </div>
+                `;
+            } else {
+                // 单色模式：原有逻辑
+                const allIcons = vipIconsConfig.map(icon => {
+                    const isSelected = vipIconState.selectedIcons.includes(icon.id);
+                    
+                    // 如果是灰色模式但没有灰色版本，则不显示该图标
+                    if (displayMode === 'gray' && !icon.graySrc) {
+                        return '';
+                    }
+                    
+                    const src = (displayMode === 'gray' && icon.graySrc) ? icon.graySrc : icon.colorSrc;
+                    
+                    return `
+                        <div class="draggable-icon ${isSelected ? 'selected' : 'unselected'}" 
+                             data-icon-id="${icon.id}" 
+                             data-version="${displayMode}"
+                             draggable="true">
+                            <img src="${src}" alt="${icon.name}" style="width: 32px; height: 32px; object-fit: contain;">
+                            <span>${icon.name}</span>
+                            ${icon.category === 'main' ? '<small>(大会员图标组)</small>' : icon.category === 'member' ? '<small>(会员图标组)</small>' : icon.category === 'yellow_diamond' ? '<small>(黄钻图标组)</small>' : ''}
+                        </div>
+                    `;
+                }).join('');
+                
+                container.innerHTML = allIcons;
+            }
+            
+            // 添加拖拽和点击事件
+            addDragAndClickEvents(container);
+        }
+
+        /**
+         * 添加拖拽和点击事件
+         */
+        function addDragAndClickEvents(container) {
+            const draggableItems = container.querySelectorAll('.draggable-icon');
+            let draggedElement = null;
+
+            draggableItems.forEach(item => {
+                // 点击切换选中状态
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const iconId = item.dataset.iconId;
+                    const version = item.dataset.version;
+                    toggleIconSelection(iconId, version);
+                });
+
+                // 拖拽开始
+                item.addEventListener('dragstart', (e) => {
+                    draggedElement = item;
+                    e.dataTransfer.effectAllowed = 'move';
+                    item.style.opacity = '0.5';
+                });
+
+                // 拖拽结束
+                item.addEventListener('dragend', (e) => {
+                    item.style.opacity = '1';
+                    draggedElement = null;
+                });
+
+                // 拖拽进入
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                });
+
+                // 拖拽放置
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    if (draggedElement && draggedElement !== item) {
+                        reorderIcons(draggedElement.dataset.iconId, item.dataset.iconId);
+                    }
+                });
+            });
+        }
+
+        /**
+         * 按照正确的顺序插入图标ID到选中列表中
+         */
+        function insertIconInOrder(iconId) {
+            const currentIcon = vipIconsConfig.find(icon => icon.id === iconId);
+            if (!currentIcon) return;
+            
+            // 定义类别优先级
+            const categoryPriority = {
+                'main': 1,
+                'member': 2,
+                'yellow_diamond': 3,
+                'decoration': 4
+            };
+            
+            // 如果是灰色模式，按灰色文件序号排序
+            if (vipIconState.displayMode === 'gray') {
+                function getGrayFileNumber(icon) {
+                    if (!icon.graySrc) return 999;
+                    const match = icon.graySrc.match(/(\d+)\.png$/);
+                    return match ? parseInt(match[1]) : 999;
+                }
+                
+                const currentGrayNum = getGrayFileNumber(currentIcon);
+                let insertIndex = vipIconState.selectedIcons.length;
+                
+                for (let i = 0; i < vipIconState.selectedIcons.length; i++) {
+                    const existingIcon = vipIconsConfig.find(icon => icon.id === vipIconState.selectedIcons[i]);
+                    if (existingIcon && getGrayFileNumber(existingIcon) > currentGrayNum) {
+                        insertIndex = i;
+                        break;
+                    }
+                }
+                
+                vipIconState.selectedIcons.splice(insertIndex, 0, iconId);
+            } else {
+                // 彩色模式和混合模式，按类别优先级排序
+                const currentPriority = categoryPriority[currentIcon.category] || 999;
+                const currentConfigIndex = vipIconsConfig.findIndex(cfg => cfg.id === iconId);
+                let insertIndex = vipIconState.selectedIcons.length;
+                
+                for (let i = 0; i < vipIconState.selectedIcons.length; i++) {
+                    const existingIcon = vipIconsConfig.find(icon => icon.id === vipIconState.selectedIcons[i]);
+                    if (!existingIcon) continue;
+                    
+                    const existingPriority = categoryPriority[existingIcon.category] || 999;
+                    const existingConfigIndex = vipIconsConfig.findIndex(cfg => cfg.id === vipIconState.selectedIcons[i]);
+                    
+                    // 如果当前图标优先级更高，插入到这里
+                    if (currentPriority < existingPriority) {
+                        insertIndex = i;
+                        break;
+                    }
+                    // 如果优先级相同，按配置文件中的顺序
+                    else if (currentPriority === existingPriority && currentConfigIndex < existingConfigIndex) {
+                        insertIndex = i;
+                        break;
+                    }
+                }
+                
+                vipIconState.selectedIcons.splice(insertIndex, 0, iconId);
+            }
+        }
+
+        /**
+         * 切换图标选中状态
+         */
+        function toggleIconSelection(iconId, version = null) {
+            const currentIcon = vipIconsConfig.find(icon => icon.id === iconId);
+            vipIconState.isCustom = true;
+            
+            if (vipIconState.displayMode === 'mixed' && version) {
+                // 混合模式：支持同时选择彩色和灰色版本，但有类别限制
+                const existingVersions = vipIconState.selectedIconVersions[iconId] || [];
+                
+                // 如果selectedIconVersions存储的是字符串，转换为数组
+                const versions = Array.isArray(existingVersions) ? existingVersions : [existingVersions].filter(v => v);
+                
+                if (versions.includes(version)) {
+                    // 如果已选中这个版本，则移除
+                    const updatedVersions = versions.filter(v => v !== version);
+                    
+                    if (updatedVersions.length === 0) {
+                        // 如果没有选中的版本了，移除整个图标
+                        const index = vipIconState.selectedIcons.indexOf(iconId);
+                        if (index > -1) {
+                            vipIconState.selectedIcons.splice(index, 1);
+                        }
+                        delete vipIconState.selectedIconVersions[iconId];
+                    } else {
+                        // 更新版本数组
+                        vipIconState.selectedIconVersions[iconId] = updatedVersions;
+                    }
+                } else {
+                    // 添加这个版本 - 检查类别限制（仅对彩色版本）
+                    if (version === 'color' && (currentIcon.category === 'main' || currentIcon.category === 'member' || currentIcon.category === 'yellow_diamond')) {
+                        // 移除同类别的其他已选中图标的彩色版本
+                        const iconsToUpdate = vipIconState.selectedIcons.filter(selectedId => {
+                            const selectedIcon = vipIconsConfig.find(icon => icon.id === selectedId);
+                            return selectedIcon && selectedIcon.category === currentIcon.category && selectedId !== iconId;
+                        });
+                        
+                        iconsToUpdate.forEach(updateId => {
+                            const existingVersionsForUpdate = vipIconState.selectedIconVersions[updateId] || [];
+                            const versionsArrayForUpdate = Array.isArray(existingVersionsForUpdate) ? existingVersionsForUpdate : [existingVersionsForUpdate].filter(v => v);
+                            
+                            // 移除彩色版本，保留灰色版本
+                            const updatedVersionsForUpdate = versionsArrayForUpdate.filter(v => v !== 'color');
+                            
+                            if (updatedVersionsForUpdate.length === 0) {
+                                // 如果没有版本了，移除整个图标
+                                const removeIndex = vipIconState.selectedIcons.indexOf(updateId);
+                                if (removeIndex > -1) {
+                                    vipIconState.selectedIcons.splice(removeIndex, 1);
+                                }
+                                delete vipIconState.selectedIconVersions[updateId];
+                            } else {
+                                // 更新版本数组
+                                vipIconState.selectedIconVersions[updateId] = updatedVersionsForUpdate;
+                            }
+                        });
+                    }
+                    
+                    // 添加当前图标
+                    if (!vipIconState.selectedIcons.includes(iconId)) {
+                        insertIconInOrder(iconId);
+                    }
+                    vipIconState.selectedIconVersions[iconId] = [...versions, version];
+                }
+            } else {
+                // 单色模式：原有逻辑
+                const index = vipIconState.selectedIcons.indexOf(iconId);
+                if (index > -1) {
+                    // 如果已选中，则移除
+                    vipIconState.selectedIcons.splice(index, 1);
+                    delete vipIconState.selectedIconVersions[iconId];
+                } else {
+                    // 检查类别限制
+                    if (currentIcon.category === 'main' || currentIcon.category === 'member' || currentIcon.category === 'yellow_diamond') {
+                        // 移除同类别的其他已选中图标
+                        const iconsToRemove = vipIconState.selectedIcons.filter(selectedId => {
+                            const selectedIcon = vipIconsConfig.find(icon => icon.id === selectedId);
+                            return selectedIcon && selectedIcon.category === currentIcon.category;
+                        });
+                        
+                        iconsToRemove.forEach(removeId => {
+                            const removeIndex = vipIconState.selectedIcons.indexOf(removeId);
+                            if (removeIndex > -1) {
+                                vipIconState.selectedIcons.splice(removeIndex, 1);
+                            }
+                            delete vipIconState.selectedIconVersions[removeId];
+                        });
+                    }
+                    
+                    // 如果未选中，则按顺序插入
+                    insertIconInOrder(iconId);
+                    vipIconState.selectedIconVersions[iconId] = vipIconState.displayMode;
+                }
+            }
+            
+            renderIconOrderList();
+            updateVipIconsDisplay();
+        }
+
+        /**
+         * 重新排序图标
+         */
+        function reorderIcons(draggedId, targetId) {
+            vipIconState.isCustom = true;
+            const draggedIndex = vipIconState.selectedIcons.indexOf(draggedId);
+            const targetIndex = vipIconState.selectedIcons.indexOf(targetId);
+            
+            if (draggedIndex > -1 && targetIndex > -1) {
+                // 两个都在选中列表中，交换位置
+                [vipIconState.selectedIcons[draggedIndex], vipIconState.selectedIcons[targetIndex]] = 
+                [vipIconState.selectedIcons[targetIndex], vipIconState.selectedIcons[draggedIndex]];
+            } else if (draggedIndex > -1) {
+                // 拖拽的在选中列表中，目标不在，移除拖拽的
+                vipIconState.selectedIcons.splice(draggedIndex, 1);
+            } else if (targetIndex > -1) {
+                // 目标在选中列表中，拖拽的不在，在目标位置插入拖拽的
+                vipIconState.selectedIcons.splice(targetIndex, 0, draggedId);
+            }
+            
+            renderIconOrderList();
+            updateVipIconsDisplay();
+        }
+
+        /**
+         * 更新会员图标显示
+         */
+        function updateVipIconsDisplay() {
+            const selectedIcons = vipIconState.selectedIcons;
+            const selectedVersions = vipIconState.selectedIconVersions;
+            const box8Container = document.querySelector('.box.box8');
+
+            // 控制整个容器的显示/隐藏
+            if (box8Container) {
+                if (selectedIcons.length === 0) {
+                    box8Container.style.display = 'none';
+                } else {
+                    box8Container.style.display = 'flex';
+                }
+            }
+
+            // 首先隐藏所有图标
+            vipIconsConfig.forEach(icon => {
+                const imgElement = document.getElementById(icon.id);
+                if (imgElement) {
+                    imgElement.style.display = 'none';
+                }
+            });
+
+            // 清理之前创建的克隆元素
+            const existingClones = document.querySelectorAll('[id^="vip-icon-"][id*="-clone"]');
+            existingClones.forEach(clone => clone.remove());
+
+            // 创建要显示的图标列表，支持混合模式下的多版本
+            const iconsToDisplay = [];
+            
+            selectedIcons.forEach(iconId => {
+                const icon = vipIconsConfig.find(cfg => cfg.id === iconId);
+                if (!icon) return;
+                
+                const versions = selectedVersions[iconId];
+                
+                if (vipIconState.displayMode === 'mixed' && Array.isArray(versions) && versions.length > 0) {
+                    // 混合模式下，每个版本都作为独立的显示项
+                    versions.forEach(version => {
+                        // 如果是灰色版本但没有灰色图标，跳过
+                        if (version === 'gray' && !icon.graySrc) return;
+                        iconsToDisplay.push({ iconId, version, originalOrder: selectedIcons.indexOf(iconId) });
+                    });
+                } else {
+                    // 单色模式
+                    const version = Array.isArray(versions) ? versions[0] : (versions || vipIconState.displayMode);
+                    // 如果是灰色模式但没有灰色版本，跳过该图标
+                    if (version === 'gray' && !icon.graySrc) return;
+                    iconsToDisplay.push({ iconId, version, originalOrder: selectedIcons.indexOf(iconId) });
+                }
+            });
+
+            // 按彩色优先排序：color版本排在gray版本前面
+            iconsToDisplay.sort((a, b) => {
+                // 首先按版本排序：color < gray
+                if (a.version === 'color' && b.version === 'gray') return -1;
+                if (a.version === 'gray' && b.version === 'color') return 1;
+                
+                // 获取图标配置信息
+                const aIcon = vipIconsConfig.find(cfg => cfg.id === a.iconId);
+                const bIcon = vipIconsConfig.find(cfg => cfg.id === b.iconId);
+                
+                // 大会员图标（main类别）优先级最高
+                const aIsMain = aIcon && aIcon.category === 'main';
+                const bIsMain = bIcon && bIcon.category === 'main';
+                
+                if (aIsMain && !bIsMain) return -1;
+                if (!aIsMain && bIsMain) return 1;
+                
+                // 相同版本按原始选中顺序排序
+                return a.originalOrder - b.originalOrder;
+            });
+            
+            // 获取容器，准备重新排列元素
+            const container = document.querySelector('.box8 .box7_right');
+            if (!container) return;
+            
+            // 收集所有需要显示的元素
+            const elementsToShow = [];
+            
+            iconsToDisplay.forEach((item, index) => {
+                const icon = vipIconsConfig.find(cfg => cfg.id === item.iconId);
+                if (!icon) return;
+
+                let imgElement = document.getElementById(item.iconId);
+                
+                // 为额外的版本创建克隆元素
+                if (index > 0 && iconsToDisplay.findIndex(x => x.iconId === item.iconId) < index) {
+                    // 这是同一图标的额外版本，创建克隆
+                    const cloneId = `${item.iconId}-clone-${item.version}-${index}`;
+                    let cloneElement = document.getElementById(cloneId);
+                    
+                    if (!cloneElement) {
+                        cloneElement = imgElement.cloneNode(true);
+                        cloneElement.id = cloneId;
+                    }
+                    imgElement = cloneElement;
+                }
+                
+                if (!imgElement) return;
+
+                // 设置图标源
+                let src = icon.colorSrc;
+                if (item.version === 'gray' && icon.graySrc) {
+                    src = icon.graySrc;
+                }
+                
+                imgElement.src = src;
+                imgElement.style.display = 'inline-block';
+                
+                elementsToShow.push(imgElement);
+            });
+            
+            // 重新排列容器中的元素顺序
+            elementsToShow.forEach(element => {
+                container.appendChild(element);
+            });
+        }
+
+
+        /**
+         * 初始化大V图标选择事件
+         */
+        function initVipBadgesEvents() {
+            const radioButtons = document.querySelectorAll('input[name="vipBadges"]');
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", () => {
+                    updateVipBadgesDisplay();
+                });
+            });
+        }
+
+        /**
+         * 更新大V图标显示状态
+         */
+        function updateVipBadgesDisplay() {
+            // 首先隐藏所有大V图标
+            const allBadges = document.querySelectorAll('.box7_right img[src^="./img/"][src$=".webp"]');
+            allBadges.forEach(badge => {
+                badge.style.display = "none";
+            });
+
+            // 获取选中的单选按钮
+            const selectedRadio = document.querySelector('input[name="vipBadges"]:checked');
+
+            if (selectedRadio && selectedRadio.value !== "none") {
+                const badgeNumber = selectedRadio.value;
+                const badgeImg = document.querySelector(`.box7_right img[src="./img/${badgeNumber}.webp"]`);
+
+                if (badgeImg) {
+                    // 显示选中的图标
+                    badgeImg.style.display = "inline-block";
+                }
+            }
+        }
+
+        /**
+         * 根据当前显示状态设置大V图标单选按钮
+         */
+        function setVipBadgeCheckboxes() {
+            // 默认选中"无图标"选项
+            let noneSelected = true;
+
+            // 检查每个图标是否显示
+            for (let i = 1; i <= 4; i++) {
+                const badgeImg = document.querySelector(`.box7_right img[src="./img/${i}.webp"]`);
+
+                if (badgeImg && badgeImg.style.display === "inline-block") {
+                    // 如果有图标显示，选中对应的单选按钮
+                    const radio = document.getElementById(`vipBadge${i}`);
+                    if (radio) {
+                        radio.checked = true;
+                        noneSelected = false;
+                        break; // 找到显示的图标后退出循环
+                    }
+                }
+            }
+
+            // 如果没有图标显示，选中"无图标"选项
+            if (noneSelected) {
+                const noneRadio = document.getElementById('vipBadgeNone');
+                if (noneRadio) {
+                    noneRadio.checked = true;
+                }
+            }
+        }
+
+        /**
+         * 初始化布局切换事件
+         */
+        function initLayoutSwitchEvents() {
+            const switchButton = document.getElementById('switchLayoutButton');
+            if (switchButton) {
+                switchButton.addEventListener('click', switchLayout);
+                
+                // 检查当前布局状态并更新按钮文本
+                updateSwitchButtonText();
+            }
+        }
+
+        /**
+         * 切换布局
+         */
+        function switchLayout() {
+            const currentPage = window.location.pathname;
+            
+            if (currentPage.includes('index.html') || currentPage.endsWith('/')) {
+                // 当前在 index.html，切换到 handoff.html
+                window.location.href = './handoff.html';
+            } else if (currentPage.includes('handoff.html')) {
+                // 当前在 handoff.html，切换到 index.html
+                window.location.href = './index.html';
+            } else {
+                // 默认切换到 handoff.html
+                window.location.href = './handoff.html';
+            }
+        }
+
+        /**
+         * 更新切换按钮的文本
+         */
+        function updateSwitchButtonText() {
+            const switchButton = document.getElementById('switchLayoutButton');
+            const currentPage = window.location.pathname;
+            
+            if (switchButton) {
+                if (currentPage.includes('handoff.html')) {
+                    switchButton.textContent = '切换到原版布局';
+                    switchButton.style.backgroundColor = '#4CAF50';
+                } else {
+                    switchButton.textContent = '切换到新版布局';
+                    switchButton.style.backgroundColor = '#ff6b6b';
+                }
+            }
+        }
+
+        /**
+         * 从localStorage加载用户数据并更新界面
+         */
+        function loadUserData() {
+            // 不再从localStorage加载用户数据，而是设置默认值
+            const userData = {
+                avatar: null,
+                name: "用户昵称",
+                good: "88",
+                qqNumber: "1234567",
+                gender: "男",
+                age: "18",
+                province: "广东",
+                city: "深圳",
+                personalSign: "",
+                qqLevel: "8",
+                levelIconStyle: "1",
+                selectedImage: "img1",
+                selectedDynamicIcon: "./img/9.gif",
+                lhIcon: "./img/35.png",
+                selectedEnergyIcon: "./img/33.png",
+                showBox7: true
+            };
+
+            // 更新头像
+            if (userData.avatar) {
+                const avatarImg = document.getElementById("avatar");
+                avatarImg.src = userData.avatar;
+            }
+
+            // 更新文本内容
+            if (userData.name) document.getElementById("name").textContent = userData.name;
+            if (userData.good) document.getElementById("good").textContent = userData.good;
+            if (userData.qqNumber) document.getElementById("qq_number").textContent = userData.qqNumber;
+            document.getElementById("gender").textContent = userData.gender || "";
+            document.getElementById("age").textContent = userData.age || "";
+            document.getElementById("province").textContent = userData.province || "";
+            document.getElementById("city").textContent = userData.city || "";
+
+            // 更新靓号图标
+            const lhImg = document.getElementById("img19");
+            if (lhImg) {
+                lhImg.src = userData.lhIcon;
+                applyLhStyle(userData.lhIcon);
+            }
+
+            // 更新个性签名显示
+            updatePersonalSignDisplay(userData.personalSign);
+
+            // 更新等级图标
+            if (userData.qqLevel) {
+                updateLevelIcons(parseInt(userData.qqLevel), userData.levelIconStyle);
+                document.getElementById("levelInput").value = userData.qqLevel;
+            } else {
+                // 默认设置1级
+                updateLevelIcons(1, userData.levelIconStyle);
+            }
+
+            // 更新等级图标样式选择
+            const styleRadio = document.getElementById(`styleRadio${userData.levelIconStyle}`);
+            if (styleRadio) styleRadio.checked = true;
+
+            // 初始化并显示会员图标
+            updateVipIconsDisplay();
+
+            // 更新VIP图标显示
+            const imageRadio = document.getElementById(`${userData.selectedImage}Radio`);
+            if (imageRadio) {
+                imageRadio.checked = true;
+            } else {
+                // 默认值
+            }
+
+            // 更新动态图标显示
+            updateDynamicIconDisplay(userData.selectedDynamicIcon);
+            const dynamicIconRadio = document.querySelector(`input[name="dynamicIconSelect"][value="${userData.selectedDynamicIcon}"]`);
+            if (dynamicIconRadio) {
+                dynamicIconRadio.checked = true;
+            }
+
+            // 更新能量值图标显示
+            updateEnergyIconDisplay(userData.selectedEnergyIcon);
+            const energyIconRadio = document.querySelector(`input[name="energyIconSelect"][value="${userData.selectedEnergyIcon}"]`);
+            if (energyIconRadio) {
+                energyIconRadio.checked = true;
+            }
+
+            // 更新等级区域显示状态
+            updateBox7Visibility(userData.showBox7);
+        }
+
+        /**
+         * 初始化个性签名相关事件
+         */
+        function initPersonalSignEvents() {
+            // 点击"编辑个签"区域打开编辑表单
+            const personalSignBox = document.querySelector(".box6");
+            const personalSignButton = document.querySelector(".last button:first-child");
+
+            // 个性签名区域点击事件
+            personalSignBox.addEventListener("click", () => {
+                // 仅切换靓号图标，不再弹出编辑窗口
+                toggleLhIcon();
+            });
+
+            // 底部个性签名按钮点击事件：同样切换靓号图标
+            personalSignButton.addEventListener("click", () => {
+                toggleLhIcon();
+            });
+        }
+
+        /**
+         * 更新个性签名显示
+         */
+        function updatePersonalSignDisplay(personalSign) {
+            const signInfoElement = document.querySelector(".box6 div p");
+
+            if (personalSign) {
+                // 如果有个性签名，则显示个性签名内容
+                signInfoElement.textContent = personalSign;
+            } else {
+                // 如果没有个性签名，则显示默认提示文本
+                signInfoElement.textContent = "编辑个签，展示我的独特态度";
+            }
+        }
+
+        /**
+         * 初始化VIP图标选择事件
+         */
+
+
+        /**
+         * 初始化动态图标选择事件
+         */
+        function initDynamicIconSelectionEvents() {
+            const radioButtons = document.querySelectorAll('input[name="dynamicIconSelect"]');
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", () => {
+                    if (radio.checked) {
+                        const selectedIcon = radio.value;
+                        // 移除localStorage存储
+                        updateDynamicIconDisplay(selectedIcon);
+                    }
+                });
+            });
+        }
+
+        /**
+         * 更新动态图标显示
+         */
+        function updateDynamicIconDisplay(iconSrc) {
+            const dynamicIconImg = document.getElementById("dynamicIcon");
+            if (dynamicIconImg) {
+                dynamicIconImg.src = iconSrc;
+            }
+        }
+
+        /**
+         * 初始化能量值图标选择事件
+         */
+        function initEnergyIconSelectionEvents() {
+            const radioButtons = document.querySelectorAll('input[name="energyIconSelect"]');
+            radioButtons.forEach((radio) => {
+                radio.addEventListener("change", () => {
+                    if (radio.checked) {
+                        const selectedIcon = radio.value;
+                        updateEnergyIconDisplay(selectedIcon);
+                    }
+                });
+            });
+        }
+
+        /**
+         * 更新能量值图标显示
+         */
+        function updateEnergyIconDisplay(iconSrc) {
+            const energyIconImg = document.getElementById("energyIcon");
+            if (energyIconImg) {
+                energyIconImg.src = iconSrc;
+            }
+        }
+
+        /**
+         * 初始化等级图标样式选择事件
+         */
+        function initLevelIconStyleEvents() {
+            const styleRadios = document.querySelectorAll('input[name="levelIconStyle"]');
+            styleRadios.forEach((radio) => {
+                radio.addEventListener("change", () => {
+                    if (radio.checked) {
+                        const selectedStyle = radio.value;
+                        // 移除localStorage存储
+
+                        // 获取当前等级并更新图标
+                        const levelInput = document.getElementById("levelInput");
+                        const level = levelInput.value ? parseInt(levelInput.value) : 1;
+                        updateLevelIcons(level, selectedStyle);
+                    }
+                });
+            });
+        }
+
+        /**
+         * 初始化编辑表单事件
+         */
+        function initEditFormEvents() {
+            const editButton = document.getElementById("editButton");
+            const modal = document.getElementById("editModal");
+            const closeButton = document.querySelector(".close");
+            const editForm = document.getElementById("editForm");
+
+            // 打开编辑表单
+            editButton.addEventListener("click", () => {
+                modal.style.display = "block";
+                populateEditForm();
+            });
+
+            // 关闭编辑表单
+            closeButton.addEventListener("click", () => {
+                modal.style.display = "none";
+            });
+
+            // 点击窗口外关闭表单
+            window.addEventListener("click", (event) => {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+
+            // 处理表单提交
+            editForm.addEventListener("submit", handleFormSubmit);
+
+            // 保存按钮行为与右上角关闭一致：点击即关闭
+            const saveButton = editForm.querySelector('input[type="submit"]');
+            if (saveButton) {
+                saveButton.addEventListener('click', () => {
+                    modal.style.display = "none";
+                });
+            }
+        }
+
+
+
+        /**
+         * 填充编辑表单
+         */
+        function populateEditForm() {
+            // 不再从localStorage加载数据，使用默认值
+            const userData = {
+                avatar: null,
+                name: document.getElementById("name").textContent || "用户昵称",
+                good: document.getElementById("good").textContent || "88",
+                qqNumber: document.getElementById("qq_number").textContent || "1234567",
+                gender: document.getElementById("gender").textContent || "男",
+                age: document.getElementById("age").textContent || "",
+                province: document.getElementById("province").textContent || "广东",
+                city: document.getElementById("city").textContent || "深圳",
+                personalSign: "",
+                qqLevel: "8",
+                levelIconStyle: "1",
+                selectedDynamicIcon: document.getElementById("dynamicIcon").src || "./img/9.gif",
+                selectedImage: "img1",
+                lhIcon: document.getElementById("img19").src || "./img/35.png",
+                selectedEnergyIcon: document.getElementById("energyIcon").src || "./img/33.png",
+                showBox7: document.querySelector('.box.box7').style.display !== 'none'
+            };
+
+            // 填充表单字段
+            if (userData.name) document.getElementById("nameInput").value = userData.name;
+            if (userData.good) document.getElementById("goodInput").value = userData.good;
+            if (userData.qqNumber) document.getElementById("qqNumberInput").value = userData.qqNumber;
+            if (userData.gender) document.getElementById("genderInput").value = userData.gender;
+            if (userData.age) document.getElementById("ageInput").value = userData.age;
+            if (userData.province) document.getElementById("provinceInput").value = userData.province;
+            if (userData.city) document.getElementById("cityInput").value = userData.city;
+            if (userData.personalSign) document.getElementById("personalSignInput").value = userData.personalSign;
+            if (userData.qqLevel) document.getElementById("levelInput").value = userData.qqLevel;
+
+            // 选择正确的等级图标样式
+            const styleRadio = document.getElementById(`styleRadio${userData.levelIconStyle}`);
+            if (styleRadio) styleRadio.checked = true;
+
+            // 选择正确的动态图标
+            const dynamicIconRadio = document.querySelector(`input[name="dynamicIconSelect"][value="${userData.selectedDynamicIcon}"]`);
+            if (dynamicIconRadio) dynamicIconRadio.checked = true;
+
+            // 选择正确的VIP图片
+            const vipImageRadio = document.getElementById(`${userData.selectedImage}Radio`);
+            if (vipImageRadio) vipImageRadio.checked = true;
+
+            // 设置会员图标自定义表单
+            document.getElementById('vipIconDisplayMode').value = vipIconState.displayMode;
+            document.querySelectorAll('#vip-icon-checkboxes input[type="checkbox"]').forEach(cb => {
+                const iconId = cb.dataset.iconId;
+                const isVisible = vipIconState.visible.includes(iconId);
+                cb.checked = isVisible;
+                if (isVisible) {
+                    cb.parentElement.classList.add('checked');
+                } else {
+                    cb.parentElement.classList.remove('checked');
+                }
+            });
+
+            // 设置已选择的大V图标状态
+            setVipBadgeCheckboxes();
+
+            // 选择正确的能量值图标
+            const energyIconRadio = document.querySelector(`input[name="energyIconSelect"][value="${userData.selectedEnergyIcon}"]`);
+            if (energyIconRadio) energyIconRadio.checked = true;
+
+            // 设置等级区域显示复选框状态
+            const showBox7Checkbox = document.getElementById('showBox7');
+            if (showBox7Checkbox) showBox7Checkbox.checked = userData.showBox7;
+        }
+
+        /**
+         * 处理表单提交
+         */
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const formData = {
+                avatarInput: document.getElementById("avatarInput"),
+                nameInput: document.getElementById("nameInput"),
+                goodInput: document.getElementById("goodInput"),
+                qqNumberInput: document.getElementById("qqNumberInput"),
+                genderInput: document.getElementById("genderInput"),
+                ageInput: document.getElementById("ageInput"),
+                provinceInput: document.getElementById("provinceInput"),
+                cityInput: document.getElementById("cityInput"),
+                personalSignInput: document.getElementById("personalSignInput"),
+                levelInput: document.getElementById("levelInput")
+            };
+
+            // 处理头像上传
+            if (formData.avatarInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const avatar = e.target.result;
+                    // 移除localStorage存储
+                    document.getElementById("avatar").src = avatar;
+                };
+                reader.readAsDataURL(formData.avatarInput.files[0]);
+            }
+
+            // 处理故事图片上传
+            let hasStories = false;
+            for (let i = 1; i <= 4; i++) {
+                const input = document.getElementById(`storyImageInput${i}`);
+                if (input && input.files.length > 0) {
+                    hasStories = true;
+                    const reader = new FileReader();
+                    const imageId = `storyImage${i}`;
+                    reader.onload = (e) => {
+                        const imageData = e.target.result;
+                        // 移除localStorage存储
+                        const imgElement = document.getElementById(imageId);
+                        if (imgElement) {
+                            imgElement.src = imageData;
+                            imgElement.parentElement.classList.add('has-image');
+                        }
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            // 如果有故事图片，显示整个容器
+            const storyContainer = document.querySelector('.story-container');
+            if (storyContainer) {
+                if (hasStories) {
+                    storyContainer.classList.add('has-stories');
+                } else {
+                    storyContainer.classList.remove('has-stories');
+                }
+            }
+
+            // 保存文本数据
+            const userData = {
+                name: formData.nameInput.value,
+                good: formData.goodInput.value,
+                qqNumber: formData.qqNumberInput.value,
+                gender: formData.genderInput.value,
+                age: formData.ageInput.value,
+                province: formData.provinceInput.value,
+                city: formData.cityInput.value,
+                personalSign: formData.personalSignInput.value
+            };
+
+            // 不再保存到localStorage，直接更新页面显示
+            document.getElementById("name").textContent = userData.name;
+            document.getElementById("good").textContent = userData.good;
+            document.getElementById("qq_number").textContent = userData.qqNumber;
+            document.getElementById("gender").textContent = userData.gender || "";
+            document.getElementById("age").textContent = userData.age || "";
+            document.getElementById("province").textContent = userData.province || "";
+            document.getElementById("city").textContent = userData.city || "";
+            updatePersonalSignDisplay(userData.personalSign);
+
+            // 处理QQ等级和图标样式
+            const level = formData.levelInput.value;
+            const selectedStyle = document.querySelector('input[name="levelIconStyle"]:checked').value;
+
+            if (level) {
+                const levelNum = parseInt(level);
+                updateLevelIcons(levelNum, selectedStyle);
+                // 移除localStorage存储
+            }
+
+            // 更新会员图标状态
+            vipIconState.displayMode = document.getElementById('vipIconDisplayMode').value;
+            updateVipIconsDisplay();
+
+            // 处理动态图标选择
+            const selectedDynamicIcon = document.querySelector('input[name="dynamicIconSelect"]:checked').value;
+            // 移除localStorage存储
+            updateDynamicIconDisplay(selectedDynamicIcon);
+
+            // 处理VIP图片选择
+            const selectedImage = document.querySelector('input[name="imageSelect"]:checked').value;
+            // 移除localStorage存储
+            // 处理大V图标选择状态
+            updateVipBadgesDisplay();
+
+            // 处理靓号图标切换
+            const lhIcon = document.getElementById("img19").src;
+            // 移除localStorage存储
+            applyLhStyle(lhIcon);
+
+            // 处理能量值图标选择
+            const selectedEnergyIcon = document.querySelector('input[name="energyIconSelect"]:checked').value;
+            updateEnergyIconDisplay(selectedEnergyIcon);
+
+            // 处理等级区域显示状态
+            const showBox7 = document.getElementById('showBox7').checked;
+            updateBox7Visibility(showBox7);
+
+            // 关闭弹窗
+            document.getElementById("editModal").style.display = "none";
+        }
+
+        /**
+         * 显示选中的VIP图片
+         */
+
+        /**
+         * 根据等级和样式生成等级图标
+         */
+        function updateLevelIcons(level, styleNum = "1") {
+            const container = document.getElementById("levelIconContainer");
+            if (!container) {
+                console.error("找不到等级图标容器!");
+                return;
+            }
+
+            container.innerHTML = ""; // 清空现有图标
+
+            // 计算各类图标数量
+            let remainingLevel = level;
+
+            // 皇冠(64级)
+            const crownCount = Math.floor(remainingLevel / 64);
+            remainingLevel %= 64;
+
+            // 太阳(16级)
+            const sunCount = Math.floor(remainingLevel / 16);
+            remainingLevel %= 16;
+
+            // 月亮(4级)
+            const moonCount = Math.floor(remainingLevel / 4);
+            remainingLevel %= 4;
+
+            // 星星(1级)
+            const starCount = remainingLevel;
+
+            // 根据选择的样式设置图标后缀
+            const styleSuffix = styleNum === "1" ? "" : styleNum;
+
+            // 创建并添加图标
+            try {
+                for (let i = 0; i < crownCount; i++) {
+                    addIcon(container, `./img/crown${styleSuffix}.png`, "皇冠(64)");
+                }
+
+                for (let i = 0; i < sunCount; i++) {
+                    addIcon(container, `./img/sun${styleSuffix}.png`, "太阳(16)");
+                }
+
+                for (let i = 0; i < moonCount; i++) {
+                    addIcon(container, `./img/moon${styleSuffix}.png`, "月亮(4)");
+                }
+
+                for (let i = 0; i < starCount; i++) {
+                    addIcon(container, `./img/star${styleSuffix}.png`, "星星(1)");
+                }
+            } catch (error) {
+                console.error("添加图标时出错:", error);
+            }
+
+            // 移除localStorage存储
+        }
+
+        /**
+         * 创建并添加图标到容器
+         */
+        function addIcon(container, src, alt) {
+            // 创建包装元素来控制间距
+            const wrapper = document.createElement("span");
+            wrapper.style.marginRight = "0";
+            wrapper.style.display = "inline-block";
+            wrapper.style.fontSize = "0";
+
+            const img = document.createElement("img");
+            img.src = src;
+            img.alt = alt;
+            img.style.height = "16px";
+            img.style.width = "16px";
+            img.style.padding = "0";
+            img.style.verticalAlign = "middle";
+            img.style.display = "inline-block";
+            img.style.border = "0";
+            img.style.lineHeight = "1";
+            img.style.fontSize = "0";
+            img.draggable = false;
+
+            // 将图标添加到包装元素中，再将包装元素添加到容器
+            wrapper.appendChild(img);
+            container.appendChild(wrapper);
+        }
+
+        /**
+         * 初始化区域显示控制事件
+         */
+        function initAreaVisibilityEvents() {
+            const showBox7Checkbox = document.getElementById('showBox7');
+            if (showBox7Checkbox) {
+                showBox7Checkbox.addEventListener('change', () => {
+                    updateBox7Visibility(showBox7Checkbox.checked);
+                });
+            }
+        }
+
+        /**
+         * 更新等级区域显示状态
+         */
+        function updateBox7Visibility(isVisible) {
+            const box7Element = document.querySelector('.box.box7');
+            if (box7Element) {
+                box7Element.style.display = isVisible ? 'flex' : 'none';
+            }
+        }
+
+        /**
+         * 初始化编辑资料按钮事件
+         */
+        function initEditProfileButtonEvents() {
+            const editProfileButton = document.querySelector(".last button:nth-child(2)");
+            if (editProfileButton) {
+                editProfileButton.addEventListener('click', () => {
+                    window.location.href = 'index2.html';
+                });
+            }
+        }
+    </script>
+
+    <!-- 添加靓号图标切换和样式应用函数 -->
+    <script>
+        /**
+         * 切换靓号标识并应用对应号码样式
+         */
+        function toggleLhIcon() {
+            const img = document.getElementById("img19");
+            if (!img) return;
+            // 判断当前文件名，兼容不同路径或查询参数
+            const fileName = img.src.split("/").pop().split("?")[0];
+            let next;
+            if (fileName === "35.2.png") {
+                next = "./img/35.png";   // 切回默认靓标
+            } else {
+                next = "./img/35.2.png"; // 切换为黑金靓标
+            }
+            img.src = next;
+            // 移除localStorage存储
+            applyLhStyle(next);
+        }
+
+        /**
+         * 根据靓号图标为QQ号码设置样式
+         */
+        function applyLhStyle(src) {
+            const pEle = document.querySelector(".box3 p");
+            if (!pEle) return;
+            if (src.includes("35.2.png")) {
+                // 黑金靓号样式
+                pEle.style.height = "15px";
+                pEle.style.lineHeight = "15px";
+                pEle.style.background = "linear-gradient(to right, #454545, #303030)";
+                pEle.style.border = "0";
+                pEle.style.color = "#F8D49C";
+                pEle.style.fontWeight = "400";
+                pEle.style.padding = "0.01rem 0.3rem 0.3rem 0.1rem";
+                pEle.style.borderTopRightRadius = "1rem";
+                pEle.style.borderBottomRightRadius = "1rem";
+
+                // 同步修改 span 样式
+                const spanEle = document.querySelector(".box3 span");
+                if (spanEle) {
+                    spanEle.style.display = "block";
+                    spanEle.style.color = "#c2a77d";
+                    spanEle.style.marginLeft = "-0.1px";
+                    spanEle.style.fontWeight = "600";
+                    spanEle.style.backgroundColor = "#454545";
+                    spanEle.style.height = "15px";
+                    spanEle.style.fontStyle = "italic";
+                    spanEle.style.borderBottomLeftRadius = "1rem";
+                    spanEle.style.borderTopLeftRadius = "1rem";
+                }
+            } else {
+                // 恢复默认样式（移除内联覆盖）
+                pEle.removeAttribute("style");
+                const spanEle = document.querySelector(".box3 span");
+                if (spanEle) spanEle.removeAttribute("style");
+            }
+        }
+    </script>
+</body>
+
+</html>
