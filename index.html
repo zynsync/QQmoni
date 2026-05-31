@@ -2088,7 +2088,8 @@
             const editProfileButton = document.querySelector(".last button:nth-child(2)");
             if (editProfileButton) {
                 editProfileButton.addEventListener('click', () => {
-                    window.location.href = 'index2.html';
+                    const modal = document.getElementById('editModal');
+                    if (modal) modal.style.display = 'block';
                 });
             }
         }
